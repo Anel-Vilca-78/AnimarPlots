@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" type="text/css" href="/static/IA.css">
+</head>
+<body>
+    <div class="header">
+        <h1 class="titulo-header">Algoritmo genetico</h1>
+    </div>
+    <h2 class="titulo-funcion">Funcion:</h2>
+    <div class="img-funcion">
+        <img src="/static/funcion-clase.png">
+        <p>(agregar imagen de la función desde el html) </p>
+    </div>
+    
+    <p class="info-agregar">Agregar otros datos: </p>
+    <form method="POST" action="/agregar">
+        <input type="submit" value="Agregar" class="boton-agregar">
+    </form>
+    
+    <div class="resultados-calculos">
+        <br><a class="subtitulos-calculos">CALCULOS</a><br><br>
+
+        <a>Rango:</a>
+        <a>{{ rango }}</a><br>
+        <a>Nueva resolucion:</a>
+        <a>{{ nResolucion | default('') | float | round(4) }}</a><br>
+        <a>Numero de bits:</a>
+        <a>{{ bits }}</a><br>
+        <a>Numero de puntos:</a>
+        <a>{{ puntos }}</a>
+        
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th class="sub-columna">Individuos en binario</th>
+                <th class="sub-columna">i</th>
+                <th class="sub-columna">x</th>
+                <th class="sub-columna">f(x)</th>
+            </tr>
+        </thead>
+        <br><h1 class="subtitulo-tablas">Tabla "final" de evaluacion de generaciones</h1>
+        {% for i in range(poblacion|length) %}
+        <tr>
+            <td class="sub-rpta">{{ poblacion[i] }}</td>
+            <td class="sub-rpta">{{ iDecimal[i] }}</td>
+            <td class="sub-rpta">{{ x[i] | default('') | round(4) if x[i] is defined }}</td>
+            <td class="sub-rpta">{{ fx[i] | default('') | round(4) if fx[i] is defined }}</td>
+        </tr>
+        {% endfor %}
+        
+    </table>
+
+    <table>
+        <h1 class="subtitulo-tablas">Tabla "final" de evaluacion</h1>
+        <thead>
+            <tr>
+                <th class="sub-columna">Mejor</th>
+                <th class="sub-columna">Peor</th>
+                <th class="sub-columna">Promedio</th>
+            </tr>
+        </thead>
+        {% for i in range(mejorCaso|length) %}
+        <tr>
+            <td class="sub-rpta">{{ mejorCaso[i] | default('') | round(4) if mejorCaso[i] is defined }}</td>
+            <td class="sub-rpta">{{ peorCaso[i] | default('') | round(4) if peorCaso[i] is defined }}</td>
+            <td class="sub-rpta">{{ promedio[i] | default('') | round(4) if promedio[i] is defined }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+<!--oooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo-->
+{% if bandera %}
+<img src="{{ url_for('static', filename='grafica_evaluacion.png') }}" alt="Descripción de la imagen"><br>
+<h1 class="subtitulo-tablas">Tablas y graficas de distribución de los individuos por generación antes de la poda</h1>
+{% for i in range(iteraciones+1) %}
+    <table>
+        <thead>
+            <tr>
+                <th class="sub-columna">Individuos en binario</th>
+                <th class="sub-columna">i</th>
+                <th class="sub-columna">x</th>
+                <th class="sub-columna">f(x)</th>
+            </tr>
+        </thead>
+
+        {% for j in range(poblacionCopia[i]|length)%}
+        
+            <tr>
+                <td class="sub-rpta">{{ poblacionCopia[i][j] }}</td>
+                <td class="sub-rpta">{{ iDecimalCopia[i][j] }}</td>
+                <td class="sub-rpta">{{ xCopia[i][j] | default('') | round(4) if xCopia[i][j] is defined }}</td>
+                <td class="sub-rpta">{{ fxCopia[i][j] | default('') | round(4) if fxCopia[i][j] is defined }}</td>
+            </tr>
+        {% endfor %}
+        
+    </table>
+    <img src="{{ url_for('static', filename='generaciones/' + loop.index0|string + '.png') }}" alt="Descripción de la imagen" class="imagensita">
+
+    {% endfor %}
+    <img src="{{ url_for('static', filename='grafica_generacion_final.png') }}" alt="Descripción de la imagen" class="imagensita">
+    {% endif %}
+</body>
+</html>
